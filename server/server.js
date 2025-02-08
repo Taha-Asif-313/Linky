@@ -17,7 +17,7 @@ connectDb();
 // Middleware setup
 app.use(
   cors({
-    origin: ["https://letslinkylink.netlify.app"], // Frontend URL
+    origin: ["https://letslinkylink.netlify.app/"], // Frontend URL
     credentials: true, // Required if you're working with cookies or sessions
   })
 );
