@@ -17,7 +17,7 @@ const useAuth = () => {
   const ValidateUser = async (url, inputs) => {
     setLoading(true); // Start loading state
     try {
-      const res = await axios.post(url, inputs);
+      const res = await axios.post(url, inputs, { withCredentials: true });
       // Handle success or failure based on the response
       if (res.data.success) {
         setResponse(res.data);
