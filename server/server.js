@@ -17,7 +17,7 @@ connectDb();
 // Middleware setup
 app.use(
   cors({
-    origin: [process.env.Origin_Url, "http://localhost:3000"], // Frontend URL
+    origin: ["https://letslinkylink.netlify.app", "http://localhost:3000"], // Frontend URL
     credentials: true, // Required if you're working with cookies or sessions
   })
 );
@@ -38,7 +38,7 @@ const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: process.env.Origin_Url, // Frontend origin
+    origin: "https://letslinkylink.netlify.app", // Frontend origin
     methods: ["GET", "POST", "PUT"], // Allowed methods
     credentials: true, // To support cookies or headers with credentials
   },
