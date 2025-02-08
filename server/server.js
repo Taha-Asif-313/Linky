@@ -15,13 +15,20 @@ const app = express();
 connectDb();
 
 // Middleware setup
-app.use(
-  cors({
-    origin: "*", // Frontend URL
-    credentials: true, // Required if you're working with cookies or sessions
-  })
-);
-app.options('*', cors()); 
+
+// CORS Configuration
+const corsOptions = {
+  origin: ['https://letslinkylink.netlify.app', 'http://localhost:3000'], // Allowed origins
+  credentials: true, // Allow credentials (cookies, authorization headers)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Handle preflight requests (OPTIONS) for all routes
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
