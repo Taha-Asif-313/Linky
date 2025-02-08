@@ -2,12 +2,12 @@ import React from "react";
 
 const Home = () => {
   return (
-    <div className="h-[600px] flex lg:justify-between justify-center items-center md:h-screen max-lg:h-screen px-8 lg:flex-row flex-col-reverse overflow-auto">
+    <div className="h-[600px] flex lg:justify-between justify-center items-center md:h-screen max-lg:h-screen max-lg:py-20 px-8 lg:flex-row flex-col-reverse overflow-auto">
       <div className=" mx-auto max-md:text-center lg:pl-10 lg:w-[50%]">
         <h2 className=" md:text-7xl text-5xl font-bold">
           Welcome to <span className="text-primary">Linky</span>!
         </h2>
-        <p className="text-base mt-4 pr-20">
+        <p className="text-base mt-4 lg:pr-20">
         A real-time chat app built with Firebase and React, enabling seamless one-on-one messaging. It features authentication, real-time updates, and a user-friendly interface for instant communication across devices.
         </p>
         <div className="flex max-sm:flex-col justify-start gap-6 mt-4">
