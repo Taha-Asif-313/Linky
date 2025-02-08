@@ -7,7 +7,7 @@ import { setConversations } from "../../redux/messageSlice";
 
 const ContactList = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.user.selectedUser);
   const otherUsers = useSelector((state) => state.user.otherUsers);
   const conversations = useSelector((state) => state.message.conversations);
@@ -15,19 +15,19 @@ const ContactList = () => {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/api/message/user-conversations`,{withCredentials:true});
+        const res = await axios.get(
+          `${apiUrl}/api/message/user-conversations`,
+          { withCredentials: true }
+        );
         console.log(res.data.receiverIds);
         dispatch(setConversations(res.data.receiverIds));
         console.log(conversations);
       } catch (error) {
         console.log(error);
       }
-     
     };
 
-    return () => {
-      fetchConversations();
-    };
+    fetchConversations();
   }, []);
 
   return (
@@ -43,7 +43,7 @@ const ContactList = () => {
             conversations.map((conversation) => (
               <>
                 <Contact
-                key={conversation._id}
+                  key={conversation._id}
                   user={conversation}
                   activeChat={activeChat}
                   setActiveChat={setActiveChat}
