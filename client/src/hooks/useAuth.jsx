@@ -17,7 +17,7 @@ const useAuth = () => {
   const ValidateUser = async (url, inputs) => {
     setLoading(true); // Start loading state
     try {
-      const res = await axios.post(url, inputs);
+      const res = await axios.post(url, inputs, { withCredentials: true });
       // Handle success or failure based on the response
       if (res.data.success) {
         setResponse(res.data);
@@ -25,8 +25,8 @@ const useAuth = () => {
         if (res.data.user) {
           dispatch(setauthUser(res.data.user));
           dispatch(setlogIn(true));
-         localStorage.setItem("authUser",JSON.stringify(res.data.user))
-          navigate("/chat")
+          localStorage.setItem("authUser", JSON.stringify(res.data.user));
+          navigate("/chat");
         } else {
           navigate("/login");
         }
