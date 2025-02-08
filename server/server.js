@@ -18,7 +18,7 @@ connectDb();
 app.use(
   cors({
     origin: ["https://letslinkylink.netlify.app", "http://localhost:3000"], // Frontend URL
-    credentials: false, // Required if you're working with cookies or sessions
+    credentials: true, // Required if you're working with cookies or sessions
   })
 );
 
