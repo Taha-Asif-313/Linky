@@ -37,16 +37,10 @@ const SendMessageField = () => {
       <form
         onSubmit={sendMessage}
         className={`p-4 border-t border-gray-600
-         w-full `}
+         w-full`}
       >
         <div className="flex items-center w-full space-x-2">
-          <button
-            type="button"
-            className={`p-2 rounded-full hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            aria-label="Attach file"
-          >
-            <FiPaperclip />
-          </button>
+          
           <input
             type="text"
             value={message}
