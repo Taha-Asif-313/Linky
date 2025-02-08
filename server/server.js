@@ -15,14 +15,12 @@ const app = express();
 connectDb();
 
 // Middleware setup
-
-const corsOptions = {
-  origin: "*", // Allow all origins temporarily
-  credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-};
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: ["https://letslinkylink.netlify.app"], // Frontend URL
+    credentials: true, // Required if you're working with cookies or sessions
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
