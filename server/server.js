@@ -21,6 +21,7 @@ app.use(
     credentials: true, // Required if you're working with cookies or sessions
   })
 );
+app.options('*', cors()); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
