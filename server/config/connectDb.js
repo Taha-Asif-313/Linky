@@ -6,8 +6,9 @@ const connectDb = () => {
     .then(() => {
       console.log("MongoDb connected!");
     })
-    .catch(() => {
+    .catch((err) => {
       console.log("MongoDb not connected!");
+      console.log(err);
     });
 };
 
