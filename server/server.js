@@ -4,7 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import http from "http";
 import { Server } from "socket.io";
-import connectDb from "./Config/connectDb.js";
+import connectDb from "./config/connectDb.js";
 import userRoute from "./routes/userRoute.js";
 import messageRoute from "./routes/messageRoute.js";
 
