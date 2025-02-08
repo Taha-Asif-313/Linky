@@ -2,9 +2,9 @@ import React from "react";
 
 const Home = () => {
   return (
-    <div className="h-[600px] flex lg:justify-between justify-center items-center md:h-screen max-lg:h-screen max-lg:py-20 px-8 lg:flex-row flex-col-reverse overflow-auto">
-      <div className=" mx-auto max-md:text-center lg:pl-10 lg:w-[50%]">
-        <h2 className=" md:text-7xl text-5xl font-bold">
+    <div className="h-[600px] flex lg:justify-between justify-center items-center md:h-screen max-lg:h-screen max-lg:py-20 px-8 md:flex-row flex-col-reverse overflow-auto">
+      <div className=" mx-auto max-md:text-center lg:pl-10 md:w-[50%]">
+        <h2 className=" md:text-5xl lg:text-7xl text-5xl font-bold">
           Welcome to <span className="text-primary">Linky</span>!
         </h2>
         <p className="text-base mt-4 lg:pr-20">
