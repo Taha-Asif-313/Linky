@@ -1,7 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Header = () => {
+  const isLogin = useSelector((state) => state.user.isLogin);
   return (
     <nav
       className={`flex rounded-b-md w-full absolute z-20 justify-between items-center py-1.5 px-6 lg:px-10 bg-zinc-950 text-white`}
@@ -18,10 +20,10 @@ const Header = () => {
       <div className="nav-end-section items-end justify-end lg:w-[30%] w-[45%] md:flex space-x-4">
         <div className="buttons flex items-center justify-end gap-2">
           <Link
-            to={"/signup"}
+            to={`${isLogin ? "/chat" : "/signup"}`}
             className="singup-btn text-sm rounded py-1 px-5 font-medium transition-all duration-300 cursor-pointer border border-primary bg-primary hover:bg-transparent"
           >
-            Let's Chat
+            {isLogin ? "Go to  chat" : "Lets Chat"}
           </Link>
         </div>
       </div>
