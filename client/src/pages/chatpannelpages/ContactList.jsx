@@ -9,7 +9,6 @@ const ContactList = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.user.selectedUser);
-  const otherUsers = useSelector((state) => state.user.otherUsers);
   const conversations = useSelector((state) => state.message.conversations);
   const [activeChat, setActiveChat] = useState(null);
   useEffect(() => {
@@ -19,9 +18,7 @@ const ContactList = () => {
           `${apiUrl}/api/message/user-conversations`,
           { withCredentials: true }
         );
-        console.log(res.data.receiverIds);
         dispatch(setConversations(res.data.receiverIds));
-        console.log(conversations);
       } catch (error) {
         console.log(error);
       }

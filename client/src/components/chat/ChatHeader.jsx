@@ -1,54 +1,121 @@
-import React from "react";
-import { CiLogout } from "react-icons/ci";
+import React, { useState } from "react";
+import { CiLogout, CiUser } from "react-icons/ci";
 import { GrLinkPrevious } from "react-icons/gr";
-import { Link } from "react-router-dom";
-import { setselectedUser } from "../../redux/userSlice";
+import { useNavigate } from "react-router-dom";
+import { setauthUser, setselectedUser } from "../../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { SlOptionsVertical } from "react-icons/sl";
+import { IoMdClose } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useCookies } from "react-cookie";
 
 const ChatHeader = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const [options, setoptions] = useState(false);
+  const [loading, setloading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const selectedUser = useSelector((state) => state.user.selectedUser);
-  const authUser = useSelector((state) => state.user.authUser);
+  const [cookies, removeCookie] = useCookies();
+
+  const DeleteChat = async () => {
+    try {
+      const res = await axios.delete(
+        `${apiUrl}/api/message/delete-chat/${selectedUser._id}`,
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        setloading(false);
+        setoptions(false);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setloading(false);
+    }
+  };
+
+  const Logout = async () => {
+    try {
+      const res = await axios.post(`${apiUrl}/api/auth/logout`, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        setauthUser({});
+        localStorage.removeItem("authUser");
+        removeCookie("authToken");
+        window.location.reload();
+        navigate("/");
+        toast.success(res.data.message);
+        setloading(false);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setloading(false);
+    }
+  };
 
   return (
     <header
       className={`flex flex-row-reverse items-center justify-end lg:justify-between py-3 px-4 bg-white border-b border-primary`}
     >
-      <div className="text-xl flex items-center gap-4">
-        <div className="flex max-lg:hidden items-center">
-          <Link to={"/profile"} className=" flex gap-2 items-center">
-            {authUser && (
-              <>
-                <img className="w-8 h-8" src={authUser.profilePic} alt="" />
-                <div className="flex flex-col max-lg:hidden">
-                  <span className="text-[8px] leading-tight">
-                    @{authUser.username}
-                  </span>
-                  <span className="lg:text-sm text-[12px]">
-                    {authUser.fullname}
-                  </span>
-                </div>
-              </>
-            )}
-          </Link>
-          <CiLogout className="text-2xl cursor-pointer ml-4 " />
-        </div>
-      </div>
-
       {selectedUser && (
-        <div className="flex items-center">
-          <GrLinkPrevious
-            onClick={() => dispatch(setselectedUser(null))}
-            className="mr-5 lg:hidden"
-          />
-          <img
-            src={selectedUser.profilePic}
-            alt={selectedUser.name}
-            className="w-10 h-10 object-cover rounded-full mr-3"
-          />
-          <div>
-            <h2 className="text-lg font-semibold">{selectedUser.fullname}</h2>
-            <h2 className="text-[12px]">@{selectedUser.username}</h2>
+        <div className="w-full flex items-center justify-between">
+          <div className="flex items-center">
+            <GrLinkPrevious
+              onClick={() => dispatch(setselectedUser(null))}
+              className="mr-5 lg:hidden"
+            />
+            <img
+              src={selectedUser.profilePic}
+              alt={selectedUser.name}
+              className="w-10 h-10 object-cover rounded-full mr-3"
+            />
+            <div>
+              <h2 className="text-lg font-semibold">{selectedUser.fullname}</h2>
+              <h2 className="text-[12px]">@{selectedUser.username}</h2>
+            </div>
+          </div>
+          <div className="relative font-[sans-serif] w-max">
+            <button
+              type="button"
+              id="dropdownToggle"
+              onClick={() => setoptions(!options)}
+              className="rounded text-2xl font-semibold text-primary"
+            >
+              {options ? <IoMdClose /> : <SlOptionsVertical />}
+            </button>
+
+            <ul
+              id="dropdownMenu"
+              className={`absolute left-[-150px] ${
+                options ? "block" : "hidden"
+              } shadow-lg bg-white py-2 z-[1000] min-w-full w-max rounded max-h-96 overflow-auto`}
+            >
+              <li
+                onClick={DeleteChat}
+                className="flex items-center py-3 px-6 hover:bg-blue-50 text-black text-sm cursor-pointer"
+              >
+                <MdDelete className="mr-3 inline-block fill-current text-xl" />
+                Delete Chat
+              </li>
+              <li
+                onClick={() => navigate("/profile")}
+                className="flex items-center py-3 px-6 hover:bg-blue-50 text-black text-sm cursor-pointer"
+              >
+                <CiUser className="mr-3 inline-block fill-current text-xl" />
+                Profile
+              </li>
+              <li
+                onClick={Logout}
+                className="flex items-center py-3 px-6 hover:bg-blue-50 text-black text-sm cursor-pointer"
+              >
+                <CiLogout className="mr-3 inline-block fill-current text-xl" />
+                Logout
+              </li>
+            </ul>
           </div>
         </div>
       )}

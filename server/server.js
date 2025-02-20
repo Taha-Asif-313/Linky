@@ -17,8 +17,8 @@ connectDb();
 // Middleware setup
 app.use(
   cors({
-    origin: ["https://letslinkylink.netlify.app", "http://localhost:3000"], // Frontend URL
-    credentials: true, // Required if you're working with cookies or sessions
+    origin: "https://letslinkylink.netlify.app", // Frontend URL
+    credentials: true,
   })
 );
 
@@ -30,17 +30,13 @@ app.use(cookieParser());
 app.use("/api/auth", userRoute);
 app.use("/api/message", messageRoute);
 
-// Serve static files from the React app
-
-// Implement Socket.io
-
 // Create the HTTP server using the Express app
 const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
     origin: "https://letslinkylink.netlify.app", // Frontend origin
-    methods: ["GET", "POST", "PUT"], // Allowed methods
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
     credentials: true, // To support cookies or headers with credentials
   },
 });
@@ -61,8 +57,9 @@ io.on("connection", (socket) => {
 
 // Start the server
 const PORT = process.env.PORT || 5000;
+const HOST = "0.0.0.0"; // Binds to all network interfaces
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
 
 export const getReceiverSocketId = (receiverId) => {

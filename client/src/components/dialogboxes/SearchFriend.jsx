@@ -24,7 +24,6 @@ const SearchFriend = ({ Show, setShow }) => {
         withCredentials: true,
       });
       setSearchedUsers(response.data.users);
-      console.log(response.data);
       setloading(false);
     } catch (error) {
       console.log(error);

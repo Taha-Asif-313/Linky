@@ -1,6 +1,5 @@
 import User from "../model/User.js";
 import { generateToken } from "../utils/generateToken.js";
-import { removeToken } from "../utils/removerToken.js";
 import bcrypt from "bcrypt";
 
 // Register User
@@ -87,13 +86,14 @@ const login = async (req, res) => {
     }
 
     // JWT Token
-    generateToken(user._id, res);
+    const authToken = generateToken(user._id, res);
 
     // Responce
     return res.status(200).json({
       success: true,
       message: "Login Successfully!",
       user: await User.findById(user._id).select("-password"),
+      authToken : authToken
     });
   } catch (error) {
     return res.status(400).json({
@@ -155,8 +155,19 @@ const searchUsers = async (req, res) => {
 // Logout User
 const logout = async (req, res) => {
   try {
-    removeToken();
+    res.clearCookie("authToken", {
+      httpOnly: true, // Prevent JavaScript access (security)
+      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+      sameSite: "None", // Allow cross-site cookies for authentication
+      maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({
       success: false,
       message: "internal server error!",

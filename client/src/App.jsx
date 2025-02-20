@@ -11,7 +11,7 @@ import UserProfile from "./pages/profile/UserProfile";
 import io from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import { setonlineUsers } from "./redux/userSlice";
-import { setuserMessages } from "./redux/messageSlice";
+import { clearUserMessages, setUserMessages } from "./redux/messageSlice";
 import Protected from "./components/Protected";
 
 const App = () => {
@@ -19,38 +19,45 @@ const App = () => {
   const isLogin = useSelector((state) => state.user.isLogin);
   const authUser = useSelector((state) => state.user.authUser);
   const userMessages = useSelector((state) => state.message.userMessages);
+
   useEffect(() => {
     if (isLogin && authUser) {
-      const newSocket = io(`${import.meta.env.VITE_API_URL}`, {
+      const socket = io(import.meta.env.VITE_API_URL, {
         query: { userId: authUser._id },
       });
 
-      newSocket.on("connect", () => {
+      socket.on("connect", () => {
         console.log("Connected to socket server");
       });
 
-      newSocket.on("getOnlineUser", (users) => {
+      // Get online users when they join
+      socket.on("getOnlineUser", (users) => {
         dispatch(setonlineUsers(users));
-        console.log(users);
       });
 
-      newSocket.on("userMessages", (messages) => {
-        dispatch(setuserMessages(messages));
-        console.log(messages);
+      // Handle receiving new messages (user is online)
+      socket.on("receiveMessage", (message) => {
+        dispatch(setUserMessages([...userMessages, message]));
       });
 
-      newSocket.on("sendMessage", (message) => {
-        dispatch(setuserMessages(message));
-        console.log(message);
-        console.log(userMessages);
+      // Handle direct message sending event
+      socket.on("sendMessage", (message) => {
+        dispatch(setUserMessages([...userMessages, message]));
       });
 
-      // Cleanup function to disconnect the socket when the component unmounts
+      socket.on("deleteChat", ({ senderId, receiverId }) => {
+        // Remove messages if the chat was deleted
+        dispatch(clearUserMessages());
+        console.log(`Chat deleted between ${senderId} and ${receiverId}`);
+      });
+
+      // Cleanup function to disconnect socket on unmount
       return () => {
-        newSocket.disconnect();
+        socket.disconnect();
+        console.log("Socket disconnected");
       };
     }
-  }, [isLogin, authUser]); // Dependencies for useEffect
+  }, [isLogin, authUser, userMessages, dispatch]);
 
   return (
     <>

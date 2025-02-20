@@ -2,8 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setselectedUser } from "../../redux/userSlice";
-import { clearUserMessages, setuserMessages } from "../../redux/messageSlice";
-import { IoIosAdd } from "react-icons/io";
+import { setUserMessages } from "../../redux/messageSlice";
 
 const Contact = ({ user, activeChat }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -19,11 +18,12 @@ const Contact = ({ user, activeChat }) => {
     try {
       const res = await axios.get(
         `${apiUrl}/api/message/get-conversation/${user._id}`,
-        { withCredentials: true }
+        {
+          withCredentials: true, // Ensures cookies are sent for authentication
+        }
       );
       dispatch(setselectedUser(user));
-      dispatch(setuserMessages(res.data.conversationMessages));
-      console.log(res.data.conversationMessages);
+      dispatch(setUserMessages(res.data.conversationMessages));
     } catch (error) {}
   };
 

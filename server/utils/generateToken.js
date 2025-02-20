@@ -8,10 +8,12 @@ export const generateToken = (userId, res) => {
 
     // Set the token in a cookie
     res.cookie("token", token, {
-      httpOnly: true, // Prevents JavaScript from accessing the cookie
-      secure: process.env.NODE || "production", // Send cookie over HTTPS only in production
-      sameSite: "None", // Controls cross-site request behavior// 1 day
+      httpOnly: true, // Prevent JavaScript access (security)
+      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+      sameSite: "None", // Allow cross-site cookies for authentication
+      maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
     });
+    return token
   } catch (error) {
     console.error("Error generating token:", error);
     return res.status(500).json({

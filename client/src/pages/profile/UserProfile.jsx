@@ -3,10 +3,32 @@ import { IoIosArrowForward } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UpdatedProfile from "../../components/dialogboxes/UpdatedProfile";
+import axios from "axios";
+import { setauthUser } from "../../redux/userSlice";
+import toast from "react-hot-toast";
 
 const UserProfile = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const authUser = useSelector((state) => state.user.authUser);
   const [dialogOpen, setdialogOpen] = useState(false);
+  const [loading, setloading] = useState(false);
+
+  const Logout = async () => {
+    try {
+      const res = await axios.post(`${apiUrl}/api/auth/logout`, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        setauthUser({});
+        localStorage.removeItem("authUser");
+        toast.success(res.data.message);
+        setloading(false);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setloading(false);
+    }
+  };
 
   return (
     <>
@@ -37,6 +59,12 @@ const UserProfile = () => {
                 className="mt-4 bg-primary text-white px-4 py-2 rounded text-sm"
               >
                 Edit Profile
+              </button>
+              <button
+                onClick={Logout}
+                className="mt-4 bg-primary text-white px-4 py-2 rounded text-sm"
+              >
+                Logout
               </button>
             </div>
           </div>

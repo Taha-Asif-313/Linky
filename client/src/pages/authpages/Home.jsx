@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Home = () => {
   const isLogin = useSelector((state) => state.user.isLogin);
   return (
-    <div className="h-[600px] flex lg:justify-between justify-center items-center md:h-screen max-lg:h-screen max-lg:py-28 px-8 md:flex-row flex-col-reverse ">
+    <div className="h-[600px] flex lg:justify-between justify-center items-center md:h-screen max-lg:py-20 max-lg:h-auto px-8 md:flex-row flex-col-reverse ">
       <div className=" mx-auto max-md:text-center lg:pl-10 md:w-[50%]">
         <h2 className=" md:text-5xl lg:text-7xl text-5xl font-bold">
           Welcome to <span className="text-primary">Linky</span>!

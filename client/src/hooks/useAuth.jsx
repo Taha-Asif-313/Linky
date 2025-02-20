@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { setauthUser, setlogIn } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import Login from "../pages/authpages/Login";
+import { useCookies } from "react-cookie";
 
 const useAuth = () => {
   // States
@@ -13,6 +14,7 @@ const useAuth = () => {
   const [response, setResponse] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [cookies, setCookie] = useCookies();
 
   const ValidateUser = async (url, inputs) => {
     setLoading(true); // Start loading state
@@ -26,6 +28,7 @@ const useAuth = () => {
           dispatch(setauthUser(res.data.user));
           dispatch(setlogIn(true));
           localStorage.setItem("authUser", JSON.stringify(res.data.user));
+          setCookie("authToken", res.data.authToken);
           navigate("/chat");
         } else {
           navigate("/login");

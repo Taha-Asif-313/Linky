@@ -7,8 +7,7 @@ const UpdatedProfile = ({ show, setshow, fullname, email }) => {
   const [inputs, setinputs] = useState({
     fullname: fullname,
   });
-  console.log(inputs);
-  
+
   const onchangeHandler = (e) => {
     setinputs({ ...inputs, [e.target.name]: e.target.value });
   };
@@ -22,7 +21,6 @@ const UpdatedProfile = ({ show, setshow, fullname, email }) => {
         { withCredentials: true }
       );
       toast.success(response.data.message);
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +62,6 @@ const UpdatedProfile = ({ show, setshow, fullname, email }) => {
             placeholder="Update Name"
             className="px-4 py-2.5 mt-6 bg-[#f0f1f2] text-gray-800 w-full text-sm  rounded-md"
           />
-       
         </div>
         <button
           onClick={onSubmit}

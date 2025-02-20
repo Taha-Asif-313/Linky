@@ -9,7 +9,7 @@ const ContactListHeader = () => {
   const authUser = useSelector((state) => state.user.authUser);
   return (
     <>
-    <SearchFriend Show={showAddFreind} setShow={setshowAddFreind} />
+      <SearchFriend Show={showAddFreind} setShow={setshowAddFreind} />
       <div className="flex items-center justify-between py-4 px-4">
         <Link className={`flex items-center gap-1 font-bold`}>
           <img className="w-10" src="/logo.png" alt="Logo" />

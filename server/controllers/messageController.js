@@ -5,63 +5,79 @@ import { getReceiverSocketId, io } from "../server.js";
 
 const sendMessage = async (req, res) => {
   try {
-    // Get SenderId from middleware
+    // Get sender ID from authentication middleware
     const senderId = req.user.id;
 
-    // receiverId from params
+    // Get receiver ID from request parameters
     const receiverId = req.params.id;
 
-    // Get message from req.body
+    // Get message content from request body
     const { message } = req.body;
 
-    // Generate new message
+    // Validate input
+    if (!message) {
+      return res.status(400).json({
+        success: false,
+        message: "Message content is required.",
+      });
+    }
+
+    // Create new message
     const newMessage = new Message({
       senderId,
       receiverId,
       message,
     });
+
     await newMessage.save();
 
-    // Check if a conversation between the sender and receiver already exists
+    // Find or create conversation
     let conversation = await Conversation.findOne({
       participants: { $all: [senderId, receiverId] },
     });
 
     if (!conversation) {
-      // If no conversation exists, create a new one
       conversation = new Conversation({
         participants: [senderId, receiverId],
         messages: [newMessage._id],
       });
+    } else {
+      conversation.messages.push(newMessage._id);
     }
 
-    // If conversation exists, just add the message to it
-    conversation.messages.push(newMessage._id);
     await conversation.save();
 
-    let conversationMessages = await Conversation.findOne({
-      participants: { $all: [senderId, receiverId] },
-    }).populate("messages", "message senderId");
+    // Populate sender details in the message
+    const findNewMessage = await Message.findById(newMessage._id)
+      // .populate("senderId", "username email") // Adjust fields as needed
+      .select("message senderId createdAt");
 
-    // Socket Io
+    // Socket.io: Send message to receiver if online
     const receiverSocketId = getReceiverSocketId(receiverId);
-    io.to(receiverSocketId).emit("sendMessage", conversationMessages.messages);
-    console.log(receiverSocketId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("receiveMessage", findNewMessage);
+      console.log(`Message sent to user ${receiverId} (Socket ID: ${receiverSocketId})`);
+    } else {
+      console.log(`User ${receiverId} is offline, message saved.`);
+    }
 
-    // Return a response
+    // Return success response
     return res.status(201).json({
       success: true,
       message: "Message sent successfully!",
-      newMessage: newMessage,
+      newMessage: findNewMessage,
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("Error sending message:", error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
+      error: error.message,
     });
   }
 };
+
 
 const getConversation = async (req, res) => {
   try {
@@ -118,6 +134,38 @@ const getUserConversations = async (req, res) => {
   }
 };
 
+const deleteChat = async (req, res) => {
+  try {
+    const userId = req.user.id; // Logged-in user
+    const receiverId = req.params.id; // Receiver ID from params
+
+    // Delete all messages between these two users
+    await Message.deleteMany({
+      senderId: { $in: [userId, receiverId] },
+      receiverId: { $in: [userId, receiverId] },
+    });
+
+    // Remove conversation from the database
+    await Conversation.findOneAndDelete({
+      participants: { $all: [userId, receiverId] },
+    });
+
+    // Emit event to update UI in real-time
+    io.emit("deleteChat", { senderId: userId, receiverId });
+
+    return res.status(200).json({
+      success: true,
+      message: "Chat deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting chat:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 const deleteMessage = async (req, res) => {};
 
-export { sendMessage, getConversation, getUserConversations };
+export { sendMessage, getConversation, getUserConversations , deleteChat};

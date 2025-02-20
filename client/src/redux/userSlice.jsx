@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const authUser = JSON.parse(localStorage.getItem("authUser"));
+
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -22,7 +23,7 @@ export const userSlice = createSlice({
     setonlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
     },
-    setlogIn: (state,action) => {
+    setlogIn: (state, action) => {
       state.isLogin = action.payload;
     },
     logOutPannel: (state) => {
