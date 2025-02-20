@@ -17,7 +17,7 @@ connectDb();
 // Middleware setup
 app.use(
   cors({
-    origin: "https://letslinkylink.netlify.app", // Frontend URL
+    origin: process.env.Client_Url, // Frontend URL
     credentials: true,
   })
 );
@@ -35,7 +35,7 @@ const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: "https://letslinkylink.netlify.app", // Frontend origin
+    origin: process.env.Client_Url, // Frontend origin
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
     credentials: true, // To support cookies or headers with credentials
   },

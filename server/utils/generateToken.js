@@ -5,14 +5,6 @@ export const generateToken = (userId, res) => {
   try {
     // Sign payload with secret key
     const token = jwt.sign({ id: userId }, process.env.JWT_SECRET);
-
-    // Set the token in a cookie
-    res.cookie("token", token, {
-      httpOnly: true, // Prevent JavaScript access (security)
-      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
-      sameSite: "None", // Allow cross-site cookies for authentication
-      maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
-    });
     return token
   } catch (error) {
     console.error("Error generating token:", error);
