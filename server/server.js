@@ -14,26 +14,19 @@ const app = express();
 // Connect to the database
 connectDb();
 
-// Allowed origins (Frontend URL)
-const allowedOrigins = [process.env.CLIENT_URL];
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
 
-// CORS Middleware
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow OPTIONS for preflight
-    allowedHeaders: ["Content-Type", "Authorization"], // Include required headers
-  })
-);
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
 
-app.options("*", cors()); // Handle preflight requests globally
+  next();
+});
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -48,7 +41,7 @@ const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL, // Corrected CORS config
+    origin: process.env.CLIENT_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   },
