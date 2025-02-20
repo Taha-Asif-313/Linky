@@ -12,6 +12,7 @@ const Contact = ({ user, activeChat }) => {
     onlineUsers && onlineUsers.includes
       ? onlineUsers.includes(user._id)
       : false;
+  const token = localStorage.getItem("authToken");
 
   const getUserMessages = async () => {
     if (!user) return; // Add null check for user
@@ -19,7 +20,10 @@ const Contact = ({ user, activeChat }) => {
       const res = await axios.get(
         `${apiUrl}/api/message/get-conversation/${user._id}`,
         {
-          withCredentials: true, // Ensures cookies are sent for authentication
+          withCredentials: true,
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "", // Include token if available
+          },
         }
       );
       dispatch(setselectedUser(user));

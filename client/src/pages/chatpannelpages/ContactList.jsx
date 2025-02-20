@@ -11,12 +11,18 @@ const ContactList = () => {
   const selectedUser = useSelector((state) => state.user.selectedUser);
   const conversations = useSelector((state) => state.message.conversations);
   const [activeChat, setActiveChat] = useState(null);
+  const token = localStorage.getItem("authToken");
   useEffect(() => {
     const fetchConversations = async () => {
       try {
         const res = await axios.get(
           `${apiUrl}/api/message/user-conversations`,
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: token ? `Bearer ${token}` : "", // Include token if available
+            },
+          }
         );
         dispatch(setConversations(res.data.receiverIds));
       } catch (error) {

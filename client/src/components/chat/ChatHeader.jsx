@@ -19,12 +19,18 @@ const ChatHeader = () => {
   const navigate = useNavigate();
   const selectedUser = useSelector((state) => state.user.selectedUser);
   const [cookies, removeCookie] = useCookies();
+  const token = localStorage.getItem("authToken");
 
   const DeleteChat = async () => {
     try {
       const res = await axios.delete(
         `${apiUrl}/api/message/delete-chat/${selectedUser._id}`,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "", // Send token if available
+          },
+        }
       );
       if (res.data.success) {
         toast.success(res.data.message);
@@ -32,16 +38,24 @@ const ChatHeader = () => {
         setoptions(false);
       }
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("Error deleting chat:", error);
       setloading(false);
     }
   };
+  
 
   const Logout = async () => {
     try {
-      const res = await axios.post(`${apiUrl}/api/auth/logout`, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${apiUrl}/api/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "", // Send token if available
+          },
+        }
+      );
       if (res.data.success) {
         setauthUser({});
         localStorage.removeItem("authUser");
@@ -52,7 +66,7 @@ const ChatHeader = () => {
         setloading(false);
       }
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("Error logging out:", error);
       setloading(false);
     }
   };

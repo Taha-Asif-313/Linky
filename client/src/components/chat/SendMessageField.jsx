@@ -13,7 +13,7 @@ const SendMessageField = () => {
   const selectedUser = useSelector((state) => state.user.selectedUser);
   const userMessages = useSelector((state) => state.message.userMessages);
   const dispatch = useDispatch();
-
+  const token = localStorage.getItem("authToken");
   // Get socket instance
   const socket = io(apiUrl, { withCredentials: true });
 
@@ -27,7 +27,12 @@ const SendMessageField = () => {
       const res = await axios.post(
         `${apiUrl}/api/message/send-message/${selectedUser._id}`,
         { message },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "", // Include token if available
+          },
+        }
       );
 
       if (res.data.success) {

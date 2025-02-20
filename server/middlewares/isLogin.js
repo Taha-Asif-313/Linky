@@ -1,14 +1,13 @@
 import jwt from 'jsonwebtoken';
 
 const isLogin = (req, res, next) => {
-  // Ensure cookies exist before accessing them
-  if (!req.cookies.authToken) {
+  // Get token from cookies or Authorization header
+  let token = req.cookies?.authToken || req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
     return res.status(401).json({ message: 'No token provided, authorization denied' });
   }
-  console.log(req.cookies.authToken);
-  
 
-  const token = req.cookies.authToken;
   console.log('Token received:', token);
 
   if (!process.env.JWT_SECRET) {

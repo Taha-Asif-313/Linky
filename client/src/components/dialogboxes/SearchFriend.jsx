@@ -14,6 +14,7 @@ const SearchFriend = ({ Show, setShow }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setloading] = useState(false);
   const [SearchedUsers, setSearchedUsers] = useState([]);
+  const token = localStorage.getItem("authToken");
 
   const onChangeHandler = async (e) => {
     setSearchTerm(e.target.value);
@@ -22,6 +23,9 @@ const SearchFriend = ({ Show, setShow }) => {
       const response = await axios.get(`${apiUrl}/api/auth/search-users`, {
         params: { query: searchTerm },
         withCredentials: true,
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "", // Include token if available
+        },
       });
       setSearchedUsers(response.data.users);
       setloading(false);

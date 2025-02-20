@@ -11,13 +11,21 @@ const UserProfile = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const authUser = useSelector((state) => state.user.authUser);
   const [dialogOpen, setdialogOpen] = useState(false);
+  const token = localStorage.getItem("authToken");
   const [loading, setloading] = useState(false);
 
   const Logout = async () => {
     try {
-      const res = await axios.post(`${apiUrl}/api/auth/logout`, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${apiUrl}/api/auth/logout`,
+        {}, // No body needed for logout
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "", // Include token if available
+          },
+        }
+      );
       if (res.data.success) {
         setauthUser({});
         localStorage.removeItem("authUser");

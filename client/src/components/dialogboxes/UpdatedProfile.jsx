@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 const UpdatedProfile = ({ show, setshow, fullname, email }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const token = localStorage.getItem("authToken");
   const [inputs, setinputs] = useState({
     fullname: fullname,
   });
@@ -18,7 +19,12 @@ const UpdatedProfile = ({ show, setshow, fullname, email }) => {
       const response = await axios.put(
         `${apiUrl}/api/auth/update-user`,
         inputs,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "", // Include token if available
+          },
+        }
       );
       toast.success(response.data.message);
     } catch (error) {

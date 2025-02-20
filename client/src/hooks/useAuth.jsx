@@ -4,7 +4,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { setauthUser, setlogIn } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
-import Login from "../pages/authpages/Login";
 import { useCookies } from "react-cookie";
 
 const useAuth = () => {
@@ -28,6 +27,7 @@ const useAuth = () => {
           dispatch(setauthUser(res.data.user));
           dispatch(setlogIn(true));
           localStorage.setItem("authUser", JSON.stringify(res.data.user));
+          localStorage.setItem("authToken" ,res.data.authToken);
           setCookie("authToken", res.data.authToken);
           navigate("/chat");
         } else {
