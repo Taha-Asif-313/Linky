@@ -4,6 +4,8 @@ import Contact from "../../components/contactlist/Contact";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setConversations } from "../../redux/messageSlice";
+import { Link } from "react-router-dom";
+import { FiUserPlus } from "react-icons/fi";
 
 const ContactList = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -24,7 +26,8 @@ const ContactList = () => {
             },
           }
         );
-        dispatch(setConversations(res.data.receiverIds));
+        dispatch(setConversations(res.data.conversations));
+        console.log(res.data);
       } catch (error) {
         console.log(error);
       }
@@ -42,17 +45,31 @@ const ContactList = () => {
       >
         <ContactListHeader />
         <ul className="space-y-2 p-4">
-          {Array.isArray(conversations) &&
+          {Array.isArray(conversations) && conversations.length > 0 ? (
             conversations.map((conversation) => (
-              <>
+              <li key={conversation.user._id}>
                 <Contact
-                  key={conversation._id}
-                  user={conversation}
+                  user={conversation.user}
                   activeChat={activeChat}
                   setActiveChat={setActiveChat}
+                  UnReadM={conversation.unreadCount}
                 />
-              </>
-            ))}
+              </li>
+            ))
+          ) : (
+            <div className="h-screen flex flex-col gap-2 items-center justify-center">
+              <p className="text-primary">Not chat found</p>
+              <Link
+                
+                className="inline-flex items-center justify-center gap-2 rounded px-6 py-1.5 text-sm font-semibold text-white bg-primary hover:bg-transparent hover:text-primary border border-primary transition-all"
+              >
+                <>
+                  <FiUserPlus className="text-lg" />
+                  Get Started
+                </>
+              </Link>
+            </div>
+          )}
         </ul>
       </div>
     </>

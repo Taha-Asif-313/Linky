@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setselectedUser } from "../../redux/userSlice";
 import { setUserMessages } from "../../redux/messageSlice";
 
-const Contact = ({ user, activeChat }) => {
+const Contact = ({ user, activeChat , UnReadM }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch();
   const onlineUsers = useSelector((state) => state.user.onlineUsers);
@@ -60,7 +60,7 @@ const Contact = ({ user, activeChat }) => {
 
         <div>
           <span className="bg-primary text-[12px] p-2 font-semibold w-6 h-6 flex items-center justify-center text-white rounded-full">
-            10
+            {UnReadM}
           </span>
         </div>
       </button>

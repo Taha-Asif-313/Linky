@@ -7,7 +7,10 @@ const AuthLayout = () => {
   return (
     <>
       <Header />
+      <div className="pt-8" >
+
       <Outlet />
+      </div>
       <Footer />
     </>
   );

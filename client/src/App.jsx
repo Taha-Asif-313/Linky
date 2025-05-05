@@ -13,6 +13,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setonlineUsers } from "./redux/userSlice";
 import { clearUserMessages, setUserMessages } from "./redux/messageSlice";
 import Protected from "./components/Protected";
+import Pricing from "./pages/authpages/Pricing";
+import Features from "./pages/authpages/Features";
+import About from "./pages/authpages/About";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -67,6 +70,9 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/about" element={<About />} />
           </Route>
           <Route path="/chat" element={<Protected Component={ChatLayout} />}>
             <Route index element={<ChatMessages />} />

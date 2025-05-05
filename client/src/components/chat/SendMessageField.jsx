@@ -54,7 +54,7 @@ const SendMessageField = () => {
   return (
     <form
       onSubmit={sendMessage}
-      className="p-4 border-t border-gray-600 w-full"
+      className="p-4 border-t border-primary w-full"
     >
       <div className="flex items-center w-full space-x-2">
         <input
@@ -62,7 +62,7 @@ const SendMessageField = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type a message"
-          className="flex-1 bg-gray-100 text-gray-900 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 bg-gray-100 text-gray-900 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button
           type="button"

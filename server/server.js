@@ -14,18 +14,13 @@ const app = express();
 // Connect to the database
 connectDb();
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  })
+);
 
 
 app.use(express.json());
@@ -64,7 +59,7 @@ io.on("connection", (socket) => {
 // Start the server
 const PORT = process.env.PORT || 5000;
 const HOST = "0.0.0.0"; // Binds to all network interfaces
-server.listen(PORT, () => {
+server.listen(PORT,HOST ,() => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 

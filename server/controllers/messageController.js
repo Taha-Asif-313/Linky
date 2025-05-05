@@ -56,7 +56,9 @@ const sendMessage = async (req, res) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("receiveMessage", findNewMessage);
-      console.log(`Message sent to user ${receiverId} (Socket ID: ${receiverSocketId})`);
+      console.log(
+        `Message sent to user ${receiverId} (Socket ID: ${receiverSocketId})`
+      );
     } else {
       console.log(`User ${receiverId} is offline, message saved.`);
     }
@@ -67,7 +69,6 @@ const sendMessage = async (req, res) => {
       message: "Message sent successfully!",
       newMessage: findNewMessage,
     });
-
   } catch (error) {
     console.error("Error sending message:", error);
     return res.status(500).json({
@@ -78,7 +79,6 @@ const sendMessage = async (req, res) => {
   }
 };
 
-
 const getConversation = async (req, res) => {
   try {
     // Get SenderId from middleware
@@ -86,6 +86,12 @@ const getConversation = async (req, res) => {
 
     // receiverId from params
     const receiverId = req.params.id;
+
+    // Mark unread messages from receiver as read
+    await Message.updateMany(
+      { senderId: receiverId, receiverId: senderId, read: false },
+      { $set: { read: true } }
+    );
 
     // Get Conversation between sender and receiver
     let conversation = await Conversation.findOne({
@@ -106,27 +112,42 @@ const getConversation = async (req, res) => {
 
 const getUserConversations = async (req, res) => {
   try {
-    // Get SenderId from middleware
     const senderId = req.user.id;
 
     // Retrieve all conversations for the authenticated user
     let conversations = await Conversation.find({
       participants: senderId,
-    }).populate("participants", "fullname username profilePic");
+    })
+      .populate("participants", "fullname username profilePic")
+      .populate({
+        path: "messages",
+        select: "message senderId receiverId read createdAt",
+      });
 
-    // Extract receiver IDs
-    const receiverIds = conversations.map((conversation) => {
-      return conversation.participants.find(
+    // Format conversation with receiver info and unread count
+    const formatted = conversations.map((conversation) => {
+      // Identify the receiver (other participant)
+      const receiver = conversation.participants.find(
         (participant) => participant._id.toString() !== senderId
       );
+
+      // Count unread messages sent *to* the logged-in user (receiverId === senderId)
+      const unreadCount = conversation.messages.filter(
+        (msg) => msg.receiverId.toString() === senderId && msg.read === false
+      ).length;
+
+      return {
+        user: receiver,
+        unreadCount,
+      };
     });
 
     return res.json({
       success: true,
-      receiverIds,
+      conversations: formatted,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error in getUserConversations:", error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -168,4 +189,4 @@ const deleteChat = async (req, res) => {
 
 const deleteMessage = async (req, res) => {};
 
-export { sendMessage, getConversation, getUserConversations , deleteChat};
+export { sendMessage, getConversation, getUserConversations, deleteChat };
