@@ -19,17 +19,17 @@ const Home = () => {
       message:
         "Linky made team communication smoother than ever. It's fast, sleek, and reliable!",
       name: "Sarah Johnson",
-      avatar: "/avatars/user1.png",
+      avatar: "https://avatar.iran.liara.run/public/boy",
     },
     {
       message: "The UI is gorgeous, and it's so easy to navigate. Love it!",
       name: "Michael Lee",
-      avatar: "/avatars/user2.png",
+      avatar: "https://avatar.iran.liara.run/public/boy",
     },
     {
       message: "Our whole remote team uses Linky now. It’s a game changer.",
       name: "Amara Patel",
-      avatar: "/avatars/user3.png",
+      avatar: "https://avatar.iran.liara.run/public/boy",
     },
   ];
 

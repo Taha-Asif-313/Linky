@@ -58,8 +58,8 @@ io.on("connection", (socket) => {
 
 // Start the server
 const PORT = process.env.PORT || 5000;
-const HOST = "0.0.0.0"; // Binds to all network interfaces
-server.listen(PORT,HOST ,() => {
+ 
+server.listen(PORT,() => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 

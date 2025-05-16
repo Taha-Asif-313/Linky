@@ -4,17 +4,17 @@ const teamMembers = [
   {
     name: "John Doe",
     role: "CEO & Founder",
-    image: "https://via.placeholder.com/150",
+    image: "https://avatar.iran.liara.run/public/boy",
   },
   {
     name: "Jane Smith",
     role: "Lead Developer",
-    image: "https://via.placeholder.com/150",
+    image: "https://avatar.iran.liara.run/public/boy",
   },
   {
     name: "Bob Brown",
     role: "Product Designer",
-    image: "https://via.placeholder.com/150",
+    image: "https://avatar.iran.liara.run/public/boy",
   },
 ];
 
